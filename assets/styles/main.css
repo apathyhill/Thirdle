@@ -1,0 +1,136 @@
+* {
+    padding: 0;
+    margin: 0;
+    font-family: "Source Sans Pro", sans-serif;
+    color: #efefef;
+}
+
+
+html {
+    font-size: min(1vh, 2vw);
+}
+
+body {
+    min-width: 100vw;
+    min-height: 100vh;
+    overflow: hidden;
+    background-color: #0f0f0f;
+}
+
+#container {
+    width: 50rem;
+    height: 93.75rem;
+    position: absolute;
+    top: calc(50% + 3.125rem);
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#banner {
+    width: 100vw;
+    background-color: rgba(255, 255, 255, 0.125);
+    height:  6.25rem;;
+    font-variant: small-caps;
+}
+
+#banner h1 {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    line-height: 6.25rem;
+    font-size: 4rem;
+}
+
+#banner h2 {
+    float: right;
+    line-height:  6.25rem;
+    font-size: 3rem;
+    padding-right: 0.5em;
+}
+
+#board-container {
+    margin: 9.375rem 0;
+    height: 56.25rem;
+}
+
+#board {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 9.375rem);
+    grid-template-rows: repeat(6, 9.375rem);
+    justify-content: center;
+}
+
+.tile {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 6rem;
+    text-transform: uppercase;
+    margin: 0.5rem;
+}
+
+.empty {
+    border: 3px solid rgba(255, 255, 255, 0.125);
+}
+
+.row {
+    display: flex;
+    width: 100%;
+    height: 6.25rem;
+}
+
+.spacer {
+    flex: 0.5;
+}
+
+button {
+    cursor: pointer;
+    border: 0;
+    background-color: #7f7f7f;
+    text-transform: uppercase;
+    flex: 1;
+    border-radius: 0.5rem;
+    margin: 0.25rem;
+}
+
+.enter-backspace {
+    flex: 1.5;
+}
+
+.incorrect:not(.correct) {
+    background: #4f4f4f;
+  }
+
+.correct {
+    background-color: #6cd36c;
+}
+
+#popup {
+    top: 8rem;
+    position: absolute;
+    height: 5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2rem;
+    color: black;
+    background: white;
+    line-height: 5rem;
+    padding: 0.25rem 1rem;
+    border-radius: 0.5rem;
+    opacity: 0;
+    z-index: 100;
+}
+
+
+@keyframes popup {
+    0% { opacity: 1; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.wrong-place:not(.correct) {
+    background: #f3ae19;
+}
+
