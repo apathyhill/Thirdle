@@ -304,6 +304,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     // Show current number
     document.getElementsByTagName("h2")[0].textContent = "#" + wordNumber.toString();
+
+    // Get browser height;
+    resize()
 });
 var input = true;
 
@@ -413,3 +416,11 @@ function type(e) {
 }
 
 window.addEventListener("keydown", type);
+
+window.onresize = resize;
+function resize() {
+    let height = document.documentElement.clientHeight;
+    let width = document.documentElement.clientWidth;
+    console.log(height);
+    document.documentElement.style.setProperty("font-size", Math.min(height*0.01, width*0.02).toString() + "px");
+};
