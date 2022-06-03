@@ -143,7 +143,7 @@ button {
 }
 
 #menu-container {
-    height: 80rem;
+    height: 70rem;
     width: 40rem;
     background-color: #1f1f1f;
     position: absolute;
@@ -157,13 +157,7 @@ button {
     font-size: 4rem;
     text-align: center;
     font-variant: small-caps;
-    margin-top: 2rem;
-}
-
-#menu-container p {
-    font-size: 3rem;
-    text-align: center;
-    margin-top: 10rem;
+    margin: 2rem 0;
 }
 
 #share {
@@ -190,4 +184,78 @@ button {
 
 .menu-closed {
     display: none;
+}
+
+#menu-open {
+    background-image: url("/assets/images/stats.svg");
+    background-size: contain;
+    height: 6.25rem;
+    width: 6.25rem;
+    float: left;
+    margin-left: 1rem;
+    cursor: pointer;
+}
+
+#menu-stats {
+    width: 35rem;
+    margin: 3rem auto;
+    text-align:center
+}
+
+.menu-stat {
+    display: inline-block;
+    text-align: center;
+    margin: 1em;
+}
+
+.menu-stat h2 {
+    font-size: 3em;
+}
+
+.menu-stat h3 {
+    font-size: 2em;
+}
+
+.chart-row p {
+    float: left;
+    text-align: right;
+}
+
+.chart-row {
+    width: 100%;
+    height: 4rem;
+    margin-bottom: 0.75rem;
+}
+
+.chart-row p {
+    width: 7.5rem;
+    padding-right: 1rem;
+    line-height: 4rem;
+    font-size: 2rem;
+    box-sizing: border-box;
+}
+
+.chart-bar-empty {
+    height: 4rem;
+    background-color: #3f3f3f;
+    width: 25rem;
+    margin: 0 auto;
+}
+
+.chart-bar-filled {
+    height: 4rem;
+    background-color: #7f7f7f;
+    width: 25rem;
+    color: #1f1f1f;
+    line-height: 4rem;
+    font-size: 2rem;
+    padding-left: 1rem;
+    box-sizing: border-box;
+}
+
+.chart-bar-empty {
+    height: 4rem;
+    background-color: #3f3f3f;
+    width: 25rem;
+    margin: 0 auto;
 }

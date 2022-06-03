@@ -1,0 +1,12 @@
+<svg viewBox="-12 -12 24 24" xmlns="http://www.w3.org/2000/svg">
+    <style>
+        rect {
+            stroke-width: 1px;
+            fill: none;
+            stroke: #efefef;
+        }
+    </style>
+    <rect x="-3" y="-6" width="6" height="12"></rect>
+    <rect x="3" y="-4" width="6" height="10"></rect>
+    <rect x="-9" y="-2" width="6" height="8"></rect>
+</svg>

@@ -295,6 +295,7 @@ var wordsAll = [
 // General variables
 var wordID, word;
 var guesses;
+var statistics;
 
 var gameState;
 const GAME_STATES = {
@@ -323,6 +324,7 @@ window.onload = function() {
     window.onkeydown = keyboardEvent;
     document.querySelector("#share").onclick = shareResults;
     document.querySelector("#menu-close").onclick = function() { menuOpen(false); }
+    document.querySelector("#menu-open").onclick = menuOpen;
 
     // Get window size
     windowSize();
@@ -330,6 +332,10 @@ window.onload = function() {
 
     // Get tiles
     tiles = document.getElementsByClassName("tile");
+
+    // Get statistics
+    statsLoad();
+    statsUpdate();
 
     // Start game
     gameState = GAME_STATES.ACTIVE;
@@ -368,20 +374,26 @@ function checkGuess() {
         tiles[guessCount*3+i].classList.add(tag);
     }
 
+    // Game won
     if (word == guess) {
         popupAlert("You did it!");
         gameState |= GAME_STATES.DONE;
+        statsSave();
         setTimeout(menuOpen, 3000);
         return;
     }
 
+    // Game lost
     if (guesses.length == 6) {
-        // game lost
+        guesses.push("");
         popupAlert(word.toUpperCase());
         gameState |= GAME_STATES.DONE;
+        statsSave();
         setTimeout(menuOpen, 3000);
+        return;
     }
-    // new guess
+
+    // New guess
     guesses.push("");
 }
 
@@ -488,4 +500,57 @@ function shareResults() {
     }, function(){
         popupAlert("Error sharing results");
     });
+}
+
+function statsLoad() {
+    statistics = localStorage.getItem("statistics");
+    if (statistics == null) {
+        statistics = {
+            gamesPlayed: 0,
+            gamesWon: 0,
+            chart: [0, 0, 0, 0, 0, 0, 0],
+            streakCurrent: 0,
+            streakMax: 0,
+        };
+    } else {
+        statistics = JSON.parse(statistics);
+    }
+    console.log(statistics)
+}
+
+function statsSave() {
+    if (!statistics === "object") { return; }
+    
+    statistics.gamesPlayed += 1;
+    if (guesses.length <= 6) {
+        statistics.gamesWon += 1;
+        statistics.streakCurrent += 1;
+        statistics.chart[guesses.length] += 1;
+    }
+
+    statistics.streakMax = Math.max(statistics.streakCurrent, statistics.streakMax);
+    
+    if (guesses.length > 6) {
+        statistics.chart[0] += 1;
+        statistics.streakCurrent = 0;
+    }
+
+    localStorage.setItem("statistics", JSON.stringify(statistics));
+
+    statsUpdate();
+}
+
+function statsUpdate() {
+    document.querySelector("#stat-plays h2").innerText = statistics.gamesPlayed;
+    document.querySelector("#stat-wins h2").innerText = statistics.gamesWon;
+
+    let percentage = statistics.gamesPlayed == 0 ? 0 : Math.floor(statistics.gamesWon/statistics.gamesPlayed*100);
+    document.querySelector("#stat-percent h2").innerText = percentage.toString() + "%";
+
+    let i = 1;
+    for (bar of document.getElementsByClassName("chart-bar-filled")) {
+        bar.style = "width: max(4rem, calc(25rem * " + (statistics.chart[i]/statistics.gamesWon).toString() + "))";
+        bar.innerText = statistics.chart[i];
+        i ++;
+    }
 }
