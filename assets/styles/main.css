@@ -187,7 +187,7 @@ button {
 }
 
 #menu-open {
-    background-image: url("/assets/images/stats.svg");
+    background-image: url("../images/stats.svg");
     background-size: contain;
     height: 6.25rem;
     width: 6.25rem;
