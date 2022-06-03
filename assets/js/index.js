@@ -469,7 +469,7 @@ function shareResults() {
 
     let txt = "";
     txt += "Thirdle #" + wordID.toString() + "\n";
-    txt += (guesses.length > 6 ? "X" : (guesses.length-1).toString()) + "/6\n";
+    txt += (guesses.length > 6 ? "X" : (guesses.length).toString()) + "/6\n";
 
     let i = 0;
     for (let tile of tiles) {
