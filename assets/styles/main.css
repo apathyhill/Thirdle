@@ -3,6 +3,7 @@
     margin: 0;
     font-family: "Source Sans Pro", sans-serif;
     color: #efefef;
+    user-select: none;
 }
 
 body {
@@ -115,7 +116,7 @@ button {
     padding: 0.25rem 1rem;
     border-radius: 0.5rem;
     opacity: 0;
-    z-index: 100;
+    z-index: 10000;
 }
 
 
@@ -129,3 +130,64 @@ button {
     background: #f3ae19;
 }
 
+
+
+#menu {
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100rem;
+    z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+#menu-container {
+    height: 80rem;
+    width: 40rem;
+    background-color: #1f1f1f;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 1rem;
+}
+
+#menu-container h1 {
+    font-size: 4rem;
+    text-align: center;
+    font-variant: small-caps;
+    margin-top: 2rem;
+}
+
+#menu-container p {
+    font-size: 3rem;
+    text-align: center;
+    margin-top: 10rem;
+}
+
+#share {
+    font-size: 4rem;
+    padding: 0.5rem 2rem;
+    font-variant: small-caps;
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0 auto;
+    background-color: #1f7f7f;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+#menu-close {
+    position: absolute;
+    right: 0;
+    font-size: 3rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+.menu-closed {
+    display: none;
+}

@@ -1,5 +1,5 @@
 // Word list
-var words = [
+var wordsAll = [
     "bad",
     "bag",
     "ban",
@@ -291,70 +291,60 @@ var words = [
     "zap",
     "zip",
 ];
-var wordNumber = Math.floor(Math.random() * words.length);
-var word = words[wordNumber];
-guesses = [""];
 
-// Activate keyboard
-var buttons = document.getElementsByTagName("button");
-document.addEventListener("DOMContentLoaded", function(event) {
+// General variables
+var wordID, word;
+var guesses;
+
+var gameState;
+const GAME_STATES = {
+    ACTIVE: 0,
+    MENU: 1,
+    DONE: 2,
+}
+
+var tiles, buttons;
+
+// Setup
+window.onload = function() {
+    // Get word
+    wordID = Math.floor(Math.random() * wordsAll.length);
+    word = wordsAll[wordID];
+    document.querySelector("#banner h2").textContent = "#" + wordID.toString();
+
+    // Start with an empty guess
+    guesses = [""];
+
+    // Make buttons clickable
+    buttons = document.getElementsByTagName("button");
     for (button of buttons) {
-        button.onclick = buttonEvent;
-    };
-
-    // Show current number
-    document.getElementsByTagName("h2")[0].textContent = "#" + wordNumber.toString();
-
-    // Get browser height;
-    resize()
-});
-var input = true;
-
-// Letter enterer
-function buttonEvent(key) {
-    if (!input) return; // do nothing if game is done
-
-    if (typeof key !== 'string') key = this.textContent; // Get key pressed
-    let guess = guesses[guesses.length-1]; // Get current guess
-    switch (key) {
-        // Backspace
-        case "⌫":
-            guesses[guesses.length-1] = guess.slice(0, -1);
-            break;
-        // Enter
-        case "enter":
-            if (guess.length == 3) checkGuess();
-            else popUp("Not enough letters");
-            break;
-        // All other letters
-        default:
-            if (guess.length < 3) guesses[guesses.length-1] += key;
-            break;
+        button.onclick = keyEvent;
     }
-    updateBoard();
-}
+    window.onkeydown = keyboardEvent;
+    document.querySelector("#share").onclick = shareResults;
+    document.querySelector("#menu-close").onclick = function() { menuOpen(false); }
 
-// Update tile letters
-var tiles = document.getElementsByClassName("tile");
-function updateBoard() {
-    for (tile of tiles) tile.textContent = "";
+    // Get window size
+    windowSize();
+    window.onresize = windowSize;
 
-    for (let i = 0; i < guesses.length; i++) {
-        let guess = guesses[i];
-        for (let j = 0; j < guess.length; j++) {
-            tiles[i*3+j].textContent = guess[j];
-        }
-    }
-}
+    // Get tiles
+    tiles = document.getElementsByClassName("tile");
 
+    // Start game
+    gameState = GAME_STATES.ACTIVE;
+    
+};
+
+// Guess checker
 function checkGuess() {
     // Get guess
     let guessCount = guesses.length-1;
     let guess = guesses[guessCount];
 
     // Check if word exists
-    if (!words.includes(guess)) {
-        popUp("Word not in list");
+    if (!wordsAll.includes(guess)) {
+        popupAlert("Word not in list");
         return;
     }
 
@@ -364,10 +354,10 @@ function checkGuess() {
         var keyGuess = guess[i];
 
         tiles[guessCount*3+i].classList.remove("empty");
-        var tag = "incorrect"; // default is incorrect 
-        if (keyWord == keyGuess) tag = "correct"; // correct letter
+        var tag = "incorrect"; // Default is incorrect 
+        if (keyWord == keyGuess) tag = "correct"; // Correct letter
         else {
-            // find if letter in word, but in wrong place
+            // Find if letter in word, but in wrong place
             for (j = 0; j < 3; j++) {
                 if (word[j] == keyGuess && word[j] != guess[j]) tag = "wrong-place";
             }
@@ -379,48 +369,123 @@ function checkGuess() {
     }
 
     if (word == guess) {
-        popUp("You did it!");
-        input = false;
+        popupAlert("You did it!");
+        gameState |= GAME_STATES.DONE;
+        setTimeout(menuOpen, 3000);
         return;
     }
 
     if (guesses.length == 6) {
         // game lost
-        popUp(word.toUpperCase());
-        input = false;
+        popupAlert(word.toUpperCase());
+        gameState |= GAME_STATES.DONE;
+        setTimeout(menuOpen, 3000);
     }
     // new guess
     guesses.push("");
 }
 
-function popUp(text) {
+function menuOpen(open=true) {
+    let menu = document.getElementById("menu");
+    if (open) { 
+        menu.classList.remove("menu-closed"); 
+        gameState |= GAME_STATES.MENU;
+    } else { 
+        menu.classList.add("menu-closed");
+        gameState &= ~GAME_STATES.MENU;
+    }
+}
+
+// Letter processer
+function keyEvent(key) {
+    if (gameState != GAME_STATES.ACTIVE) { return; }// Do nothing if game is done
+
+    if (typeof key !== "string") key = this.textContent; // Get key pressed
+    let guess = guesses[guesses.length-1]; // Get current guess
+    switch (key) {
+        // Backspace
+        case "⌫":
+            guesses[guesses.length-1] = guess.slice(0, -1);
+            break;
+        // Enter
+        case "enter":
+            if (guess.length == 3) checkGuess();
+            else popupAlert("Not enough letters");
+            break;
+        // All other letters
+        default:
+            if (guess.length < 3) guesses[guesses.length-1] += key;
+            break;
+    }
+    updateBoard();
+}
+
+// Update tile letters
+function updateBoard() {
+    for (tile of tiles) tile.textContent = "";
+
+    for (let i = 0; i < guesses.length; i++) {
+        let guess = guesses[i];
+        for (let j = 0; j < guess.length; j++) {
+            tiles[i*3+j].textContent = guess[j];
+        }
+    }
+}
+
+// Get window size
+function windowSize() {
+    let height = document.documentElement.clientHeight;
+    let width = document.documentElement.clientWidth;
+    document.documentElement.style.setProperty("font-size", Math.min(height*0.01, width*0.02).toString() + "px");
+}
+
+// Creates a popup
+function popupAlert(text) {
     let div = document.getElementById("popup");
-    if (div) div.remove();
+    if (div) { div.remove(); }
     div = document.createElement("div");
     div.id = "popup";
     div.textContent = text;
-    div.style.animation = "popup 2s ease";
+    div.style.animation = "popup 3s ease";
     document.body.appendChild(div);
 }
 
-// Keyboard support
-function type(e) {
-    if (!input) return;
+// Keyboard functionality
+function keyboardEvent(e) {
+    if (gameState != GAME_STATES.ACTIVE) { return; } // Return if game not active
 
+    // Pass key to button handler
     let key;
     if (e.keyCode == 8) key = "⌫";
     else if (e.keyCode == 13) key = "enter";
     else if (e.keyCode >= 65 && e.keyCode < 91) key = e.key.toLowerCase();
-    
-    if (key !== undefined) buttonEvent(key);
+    if (key !== undefined) keyEvent(key);
 }
 
-window.addEventListener("keydown", type);
+// Get and copy results
+function shareResults() {
+    if (!(gameState & GAME_STATES.DONE)) { popupAlert("Game not finished"); return; }
+    if (!navigator.clipboard) { popupAlert("Sharing not supported"); return; }
 
-window.onresize = resize;
-function resize() {
-    let height = document.documentElement.clientHeight;
-    let width = document.documentElement.clientWidth;
-    console.log(height);
-    document.documentElement.style.setProperty("font-size", Math.min(height*0.01, width*0.02).toString() + "px");
-};
+    let txt = "";
+    txt += "Thirdle #" + wordID.toString() + "\n";
+    txt += (guesses.length > 6 ? "X" : (guesses.length-1).toString()) + "/6\n";
+
+    let i = 0;
+    for (let tile of tiles) {
+        if (tile.classList.contains("incorrect")) { txt += "⬛"; }
+        else if (tile.classList.contains("wrong-place")) { txt += "🟨"; }
+        else if (tile.classList.contains("correct")) { txt += "🟩"; }
+        else { break; }
+        if (i % 3 == 2) { txt += "\n"; }
+        i ++;
+    }
+
+    txt += "https://apathyhill.github.io/Thirdle/";
+
+    navigator.clipboard.writeText(txt).then(function() {
+        popupAlert("Results copied to clipboard");
+    }, function(){
+        popupAlert("Error sharing results");
+    });
+}
