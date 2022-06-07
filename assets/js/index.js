@@ -480,7 +480,7 @@ function shareResults() {
     if (!navigator.clipboard) { popupAlert("Sharing not supported"); return; }
 
     let txt = "";
-    txt += "Thirdle #" + wordID.toString() + "\n";
+    txt += "Thirdle #" + wordID.toString() + " ";
     txt += (guesses.length > 6 ? "X" : (guesses.length).toString()) + "/6\n";
 
     let i = 0;
